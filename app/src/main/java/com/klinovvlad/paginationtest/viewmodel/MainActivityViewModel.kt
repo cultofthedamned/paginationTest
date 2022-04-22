@@ -12,7 +12,13 @@ import com.klinovvlad.paginationtest.utils.NETWORK_PAGE_SIZE
 class MainActivityViewModel(private val userApi: UserApi) : ViewModel() {
 
     val users = Pager(
-        config = PagingConfig(pageSize = NETWORK_PAGE_SIZE), pagingSourceFactory = {
+        config = PagingConfig(
+            enablePlaceholders = true,
+            initialLoadSize = NETWORK_PAGE_SIZE,
+            pageSize = NETWORK_PAGE_SIZE,
+            prefetchDistance = 10,
+        ),
+        pagingSourceFactory = {
             UsersPagingSource(userApi = userApi)
         }).flow.cachedIn(viewModelScope)
 

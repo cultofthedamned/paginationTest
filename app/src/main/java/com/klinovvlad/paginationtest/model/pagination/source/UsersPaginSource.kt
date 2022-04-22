@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import com.klinovvlad.paginationtest.model.UserNetworkData.UserResults
 import com.klinovvlad.paginationtest.network.api.UserApi
 import com.klinovvlad.paginationtest.utils.USERS_STARTING_PAGE_INDEX
+import kotlinx.coroutines.delay
 import retrofit2.*
 import java.io.IOException
 
@@ -15,11 +16,12 @@ class UsersPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UserResults> {
         return try {
             val page = params.key ?: USERS_STARTING_PAGE_INDEX
+            val pageSize = params.loadSize
             val response = userApi.getData(page)
             val users = response.awaitResponse().body()?.results ?: emptyList()
             LoadResult.Page(
                 users,
-                if (page == USERS_STARTING_PAGE_INDEX) null else page - 1,
+                if (page == pageSize) null else page - 1,
                 if (users.isEmpty()) null else page + 1
             )
         } catch (e: IOException) {
@@ -27,7 +29,6 @@ class UsersPagingSource(
         } catch (e: HttpException) {
             return LoadResult.Error(e)
         }
-
     }
 
     override fun getRefreshKey(state: PagingState<Int, UserResults>): Int? {

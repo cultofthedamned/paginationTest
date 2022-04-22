@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.klinovvlad.paginationtest.R
 import com.klinovvlad.paginationtest.databinding.ActivityMainBinding
+import com.klinovvlad.paginationtest.model.pagination.adapters.UserLoadingStateAdapter
 import com.klinovvlad.paginationtest.network.api.UserApi
 import com.klinovvlad.paginationtest.network.instance.UserInstance
 import com.klinovvlad.paginationtest.view.adapters.UserAdapter
@@ -36,7 +37,9 @@ class MainActivity : AppCompatActivity() {
         binding.userRecycMain.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             setHasFixedSize(true)
-            adapter = userAdapter
+            adapter = userAdapter.withLoadStateFooter(
+                footer = UserLoadingStateAdapter(userAdapter)
+            )
         }
         lifecycleScope.launch {
             viewModel.users.collectLatest { pagedData ->
