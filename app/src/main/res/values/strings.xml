@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">paginationTest</string>
+    <string name="try_again">try again</string>
 </resources>

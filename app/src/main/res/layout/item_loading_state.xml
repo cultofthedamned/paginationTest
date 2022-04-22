@@ -10,6 +10,14 @@
         android:id="@+id/progressbar"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/try_network_request"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/try_again"
+        android:visibility="gone" />
 
 </LinearLayout>

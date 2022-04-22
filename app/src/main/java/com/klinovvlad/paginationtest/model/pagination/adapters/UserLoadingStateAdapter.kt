@@ -3,7 +3,6 @@ package com.klinovvlad.paginationtest.model.pagination.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +14,7 @@ class UserLoadingStateAdapter(
 ) : LoadStateAdapter<UserLoadingStateAdapter.UserPagingAdapterHolder>() {
 
     override fun onBindViewHolder(holder: UserPagingAdapterHolder, loadState: LoadState) {
-        holder.bind(loadState)
+        holder.bind(loadState) { adapter.retry() }
     }
 
     override fun onCreateViewHolder(
@@ -35,8 +34,15 @@ class UserLoadingStateAdapter(
         private val binding: ItemLoadingStateBinding,
         private val retry: () -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(state: LoadState) {
-            binding.progressbar.isVisible = state is LoadState.Loading
+        fun bind(state: LoadState, retry: () -> Unit) {
+            if (state is LoadState.Error) {
+                binding.tryNetworkRequest.visibility = View.VISIBLE
+                binding.tryNetworkRequest.setOnClickListener {
+                    retry()
+                }
+            } else if (state is LoadState.Loading) {
+                binding.progressbar.visibility = View.VISIBLE
+            }
         }
     }
 
